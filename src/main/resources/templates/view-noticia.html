@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Notícia</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div>
+            <h3 th:text="${noticia.titulo}"></h3>
+            <span>
+                <img th:src="${noticia.urlImagem}" alt="" width="150" />
+            </span>
+            <div th:text="${noticia.descricao}"></div>
+            <div>
+                Publicado em: <span th:text="${noticia.emissao}"></span>
+            </div>
+            <div>
+                <a th:href="@{/noticia/edit/{id}(id=${noticia.id})}">Alterar</a>
+                <a th:href="@{/noticia/delete/{id}(id=${noticia.id})}">Excluir</a>
+                <a th:href="@{/noticia}">Voltar</a>
+            </div>
+        </div>
+        <div>
+            <form action="#"
+                  method="post"
+                  th:action="@{/comentario/add/{noticiaId}(noticiaId=${noticia.id})}"
+                  th:object="${comentario}">
+                <label for="descricao">Deixe seu comentário</label>
+                <br/>
+                <textarea id="descricao"
+                          th:field="*{descricao}"></textarea>
+                <span 
+                    th:if="${#fields.hasErrors('descricao')}"
+                    th:erros="*{descricao}"></span>
+                <br/>
+                <input type="submit" value="Adicionar Comentário" />
+            </form>
+
+            <h4>Comentários</h4>
+            <div th:switch="${noticia.comentarios}">
+                <h2 th:case="null">Não existe comentários para esta notícia!</h2>
+                <div th:case="*">
+                    <div th:each="com : ${noticia.comentarios}">
+                        <div th:text="${com.descricao}"></div>
+                        <div>
+                            Publicado em: <div th:text="${com.emissao}"></div>
+                        </div>
+<!--                        <div>
+                            <span th:text="${com.totalPositivos}" ></span>&nbsp;
+                            <a th:href="@{/comentario/gostei/{nid}/{comid}(nid=${noticia.id},comid=${com.id.numero})}">Gostei!</a>&nbsp;
+                            <span th:text="${com.totalNegativos}" ></span>&nbsp;
+                            <a th:href="@{/comentario/naogostei/{nid}/{comid}(nid=${noticia.id},comid=${com.id.numero})}">Não gostei!</a>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Lista de Notícias</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <p><a href="/noticia/new">Adicionar nova notícia</a></p>
+        <div th:switch="${noticias}">
+            <h2 th:case="null">Não existe notícia!</h2>
+            <div th:case="*">
+                <h2>Notícias</h2>
+                <div th:each="noticia : ${noticias}">
+                    <span>
+                        <img th:src="${noticia.urlImagem}" alt="" width="150" />
+                    </span>
+                    <h3 th:text="${noticia.titulo}"></h3>
+                    Publicado em: <div th:text="${noticia.emissao}"></div>
+                    <a th:href="@{/noticia/view/{id}(id=${noticia.id})}">Clique aqui para ver mais...</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
