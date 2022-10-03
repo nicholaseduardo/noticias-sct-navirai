@@ -30,13 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ComentarioController {
 
     @Autowired
-    private NoticiaRepository noticiaRepo;
-
-    @Autowired
-    private ComentarioRepository repo;
-    
-    @Autowired
-    private AvaliacaoRepository avaliacaoRepo;
+    private ComentarioService service;
 
     @PostMapping("/add/{noticiaId}")
     @Transactional
@@ -48,10 +42,7 @@ public class ComentarioController {
         if (result.hasErrors()) {
             return "view-noticia";
         }
-        Noticia noticia = noticiaRepo.findById(noticiaId)
-                .orElseThrow(() -> new IllegalArgumentException("Id inexistente"));
-        noticia.add(comentario);
-        repo.save(comentario);
+        service.add(noticiaId, comentario);
         return "redirect:/noticia/view/" + noticiaId;
     }
 
@@ -61,17 +52,8 @@ public class ComentarioController {
             @PathVariable("comid") Long comid,
             Model model,
             HttpServletRequest request) {
-        Noticia noticia = noticiaRepo.findById(nid)
-                .orElseThrow(() -> new IllegalArgumentException("Id inexistente"));
-        Comentario comentario = repo.findById(new ComentarioId(comid, noticia))
-                .orElseThrow(() -> new IllegalArgumentException("Id de comentário inválido!"));
         
-        Avaliacao avaliacao = new Avaliacao(
-                request.getRemoteAddr(),
-                TipoAvaliacao.POSITIVO);
-        comentario.add(avaliacao);
-        avaliacaoRepo.save(avaliacao);
-        
+        service.avaliar(nid, comid, TipoAvaliacao.POSITIVO, request);
         return "redirect:/noticia/view/" + nid;        
     }
 
@@ -81,17 +63,8 @@ public class ComentarioController {
             @PathVariable("comid") Long comid,
             Model model,
             HttpServletRequest request) {
-        Noticia noticia = noticiaRepo.findById(nid)
-                .orElseThrow(() -> new IllegalArgumentException("Id inexistente"));
-        Comentario comentario = repo.findById(new ComentarioId(comid, noticia))
-                .orElseThrow(() -> new IllegalArgumentException("Id de comentário inválido!"));
         
-        Avaliacao avaliacao = new Avaliacao(
-                request.getRemoteAddr(),
-                TipoAvaliacao.NEGATIVO);
-        comentario.add(avaliacao);
-        avaliacaoRepo.save(avaliacao);
-        
+        service.avaliar(nid, comid, TipoAvaliacao.NEGATIVO, request);
         return "redirect:/noticia/view/" + nid;        
     }
 

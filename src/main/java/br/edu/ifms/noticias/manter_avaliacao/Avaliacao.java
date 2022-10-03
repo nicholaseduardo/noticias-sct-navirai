@@ -5,7 +5,6 @@
 package br.edu.ifms.noticias.manter_avaliacao;
 
 import br.edu.ifms.noticias.manter_noticias.LocalDateTimeAttributeConverter;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Convert;
@@ -17,7 +16,7 @@ import javax.persistence.Entity;
  * @author santos
  */
 @Entity
-public class Avaliacao implements Serializable {
+public class Avaliacao {
     
     @EmbeddedId
     private AvaliacaoId id;

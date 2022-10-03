@@ -51,12 +51,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div>
                             Publicado em: <div th:text="${com.emissao}"></div>
                         </div>
-<!--                        <div>
-                            <span th:text="${com.totalPositivos}" ></span>&nbsp;
-                            <a th:href="@{/comentario/gostei/{nid}/{comid}(nid=${noticia.id},comid=${com.id.numero})}">Gostei!</a>&nbsp;
-                            <span th:text="${com.totalNegativos}" ></span>&nbsp;
-                            <a th:href="@{/comentario/naogostei/{nid}/{comid}(nid=${noticia.id},comid=${com.id.numero})}">Não gostei!</a>
-                        </div>-->
+                        <div>
+                            <span th:text="${com.gostei}" ></span>&nbsp;
+                            <a th:href="@{/comentario/gostei/{nid}/{comid}(nid=${noticia.id},comid=${com.numero})}">Gostei!</a>&nbsp;
+                            <span th:text="${com.naoGostei}" ></span>&nbsp;
+                            <a th:href="@{/comentario/naogostei/{nid}/{comid}(nid=${noticia.id},comid=${com.numero})}">Não gostei!</a>
+                        </div>
                     </div>
                 </div>
             </div>

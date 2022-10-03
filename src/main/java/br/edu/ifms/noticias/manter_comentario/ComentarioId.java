@@ -69,6 +69,9 @@ public class ComentarioId implements Serializable {
         }
         return Objects.equals(this.noticia, other.getNoticia());
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "ComentarioId{" + "numero=" + numero + '}';
+    }
 }

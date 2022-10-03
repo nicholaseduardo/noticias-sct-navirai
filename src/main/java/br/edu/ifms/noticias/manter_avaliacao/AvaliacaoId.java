@@ -68,5 +68,9 @@ public class AvaliacaoId implements Serializable {
         }
         return Objects.equals(this.comentario, other.getComentario());
     }
-    
+
+    @Override
+    public String toString() {
+        return "AvaliacaoId{" + "numero=" + numero + '}';
+    }
 }

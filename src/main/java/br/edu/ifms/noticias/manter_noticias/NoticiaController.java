@@ -5,6 +5,8 @@
 package br.edu.ifms.noticias.manter_noticias;
 
 import br.edu.ifms.noticias.manter_comentario.Comentario;
+import br.edu.ifms.noticias.manter_comentario.ComentarioRepository;
+import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,9 @@ public class NoticiaController {
 
     @GetMapping
     public String showList(Model model) {
-        model.addAttribute("noticias", repo.findAll());
+        List<Noticia> lista = repo.findAll();
+        List<NoticiaDto> noticias = NoticiaDto.converter(lista);
+        model.addAttribute("noticias", noticias);
         return "index";
     }
 
@@ -56,7 +60,8 @@ public class NoticiaController {
             @PathVariable("id") Long id, Model model) {
         Noticia noticia = repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Id inválido"));
-        model.addAttribute("noticia", noticia);
+        
+        model.addAttribute("noticia", new NoticiaDetalheDto(noticia));
         model.addAttribute("comentario", new Comentario());
         return "view-noticia";
     }

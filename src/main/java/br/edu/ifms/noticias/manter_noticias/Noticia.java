@@ -6,12 +6,12 @@ package br.edu.ifms.noticias.manter_noticias;
 
 import br.edu.ifms.noticias.manter_comentario.Comentario;
 import br.edu.ifms.noticias.manter_comentario.ComentarioId;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +28,7 @@ import org.hibernate.annotations.Type;
  * @author santos
  */
 @Entity
-public class Noticia implements Serializable {
+public class Noticia {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,16 +49,17 @@ public class Noticia implements Serializable {
     private LocalDateTime emissao;
     
     @OneToMany(mappedBy = "id.noticia",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH},
             orphanRemoval = true)
-    private List<Comentario> comentarios;
+    private List<Comentario> comentarios = new ArrayList();
     
     /**
      * Número do último comentário.
      * Armazena o número do último comentário adicionado na notícia mesmo que 
      * algum comentário tenha sido removido.
      */
-    private AtomicLong ultimoComentario;
+    private Long ultimoComentario;
 
     public Noticia() {
         this(null, null, null);
@@ -70,8 +71,7 @@ public class Noticia implements Serializable {
         this.urlImagem = urlImagem;
         
         emissao = LocalDateTime.now();
-        comentarios = new ArrayList();
-        ultimoComentario = new AtomicLong(0);
+        ultimoComentario = 0L;
     }
 
     public Long getId() {
@@ -121,11 +121,12 @@ public class Noticia implements Serializable {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
         int size = comentarios.size();
-        ultimoComentario.set(comentarios.get(size - 1).getId().getNumero());
+        ultimoComentario = comentarios.get(size - 1).getId().getNumero();
     }
     
     public Noticia add(Comentario value) {
-        value.setId(new ComentarioId(ultimoComentario.incrementAndGet(), this));
+        ultimoComentario++;
+        value.setId(new ComentarioId(ultimoComentario, this));
         
         this.comentarios.add(value);
         return this;

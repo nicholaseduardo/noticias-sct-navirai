@@ -7,11 +7,12 @@ package br.edu.ifms.noticias.manter_comentario;
 import br.edu.ifms.noticias.manter_avaliacao.Avaliacao;
 import br.edu.ifms.noticias.manter_avaliacao.AvaliacaoId;
 import br.edu.ifms.noticias.manter_noticias.LocalDateTimeAttributeConverter;
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ import javax.validation.constraints.NotBlank;
  * @author santos
  */
 @Entity
-public class Comentario implements Serializable {
+public class Comentario {
     
     @EmbeddedId
     private ComentarioId id;
@@ -36,16 +37,17 @@ public class Comentario implements Serializable {
     private LocalDateTime emissao;
     
     @OneToMany(mappedBy = "id.comentario",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH},
             orphanRemoval = true)
-    private List<Avaliacao> avaliacoes;
+    private List<Avaliacao> avaliacoes = new ArrayList();
     
     /**
      * Número da última avaliação.
      * Armazena o número do última avaliação adicionada ao comentário mesmo que 
      * alguma avaliação já tenha sido removida.
      */
-    private AtomicLong ultimaAvaliacao;
+    private Long ultimaAvaliacao;
 
     public Comentario() {
         this(null);
@@ -54,7 +56,7 @@ public class Comentario implements Serializable {
     public Comentario(String descricao) {
         this.descricao = descricao;
         emissao = LocalDateTime.now();
-        ultimaAvaliacao = new AtomicLong(0);
+        ultimaAvaliacao = 0L;
     }
 
     public ComentarioId getId() {
@@ -100,11 +102,13 @@ public class Comentario implements Serializable {
 
     public void setAvaliacoes(List<Avaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
+        int size = avaliacoes.size();
+        ultimaAvaliacao = avaliacoes.get(size - 1).getId().getNumero();
     }
     
     public Comentario add(Avaliacao value) {
-        value.setId(new AvaliacaoId(ultimaAvaliacao.incrementAndGet(), this));
-        
+        ultimaAvaliacao++;
+        value.setId(new AvaliacaoId(ultimaAvaliacao, this));
         this.avaliacoes.add(value);
         return this;
     }
@@ -141,6 +145,11 @@ public class Comentario implements Serializable {
             return false;
         }
         return Objects.equals(this.emissao, other.getEmissao());
+    }
+
+    @Override
+    public String toString() {
+        return "Comentario{" + "id=" + id + ", descricao=" + descricao + ", emissao=" + emissao + ", ultimaAvaliacao=" + ultimaAvaliacao + '}';
     }
     
 }
