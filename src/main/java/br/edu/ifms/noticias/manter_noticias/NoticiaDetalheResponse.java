@@ -15,6 +15,7 @@ import java.util.List;
 public class NoticiaDetalheResponse extends AbstractNoticiaResponse {
     
     private List<ComentarioResponse> comentarios = new ArrayList();
+    private int numeroComentarios;
 
     public NoticiaDetalheResponse() {
     }
@@ -22,10 +23,15 @@ public class NoticiaDetalheResponse extends AbstractNoticiaResponse {
     public NoticiaDetalheResponse(Noticia obj) {
         super(obj);
         this.comentarios = ComentarioResponse.converter(obj.getComentarios());
+        this.numeroComentarios = this.comentarios.size();
     }
 
     public List<ComentarioResponse> getComentarios() {
         return comentarios;
+    }
+
+    public int getNumeroComentarios() {
+        return numeroComentarios;
     }
     
 }

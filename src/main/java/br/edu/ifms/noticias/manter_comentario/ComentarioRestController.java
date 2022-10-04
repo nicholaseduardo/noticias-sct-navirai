@@ -5,63 +5,70 @@
 package br.edu.ifms.noticias.manter_comentario;
 
 import br.edu.ifms.noticias.manter_avaliacao.TipoAvaliacao;
+import br.edu.ifms.noticias.manter_noticias.Noticia;
+import br.edu.ifms.noticias.manter_noticias.NoticiaDetalheResponse;
+import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
  * @author santos
  */
-@Controller
-@RequestMapping("comentario")
-public class ComentarioController {
+@RestController
+@RequestMapping("api/comentario")
+public class ComentarioRestController {
 
     @Autowired
     private ComentarioService service;
 
-    @PostMapping("/add/{noticiaId}")
+    @PostMapping("/noticiaId")
     @Transactional
-    public String add(
+    public ResponseEntity<ComentarioResponse> cadastrar(
             @PathVariable("noticiaId") Long noticiaId,
             @Valid ComentarioRequest comentario,
-            BindingResult result,
-            Model model) {
-        if (result.hasErrors()) {
-            return "view-noticia";
-        }
-        service.add(noticiaId, comentario);
-        return "redirect:/noticia/view/" + noticiaId;
+            UriComponentsBuilder uriBuilder) {
+        Comentario t = service.add(noticiaId, comentario);
+
+        URI uri = uriBuilder.path("/api/comentario/{noticiaId}/{numero}")
+                .buildAndExpand(noticiaId,
+                        t.getId().getNumero())
+                .toUri();
+        return ResponseEntity
+                .created(uri)
+                .body(new ComentarioResponse(t));
     }
 
     @GetMapping("/gostei/{nid}/{comid}")
-    public String gostei(
+    @Transactional
+    public ResponseEntity<?> gostei(
             @PathVariable("nid") Long nid,
             @PathVariable("comid") Long comid,
-            Model model,
             HttpServletRequest request) {
-        
         service.avaliar(nid, comid, TipoAvaliacao.POSITIVO, request);
-        return "redirect:/noticia/view/" + nid;        
-    }
+        
+        return ResponseEntity.ok().build();
+    }    
 
     @GetMapping("/naogostei/{nid}/{comid}")
-    public String naogostei(
+    @Transactional
+    public ResponseEntity<?> naoGostei(
             @PathVariable("nid") Long nid,
             @PathVariable("comid") Long comid,
-            Model model,
             HttpServletRequest request) {
-        
         service.avaliar(nid, comid, TipoAvaliacao.NEGATIVO, request);
-        return "redirect:/noticia/view/" + nid;        
+        
+        return ResponseEntity.ok().build();
     }
-
 }

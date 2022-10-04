@@ -29,12 +29,12 @@ public class NoticiaService {
         return NoticiaResponse.converter(lista);
     }
     
-    public void add(NoticiaRequest request) {
-        request.cadastrar(repo);
+    public Noticia add(NoticiaRequest request) {
+        return request.cadastrar(repo);
     }
     
-    public void update(NoticiaRequest request, Long id) {
-        request.atualizar(repo, id);
+    public Noticia update(NoticiaRequest request, Long id) {
+        return request.atualizar(repo, id);
     }
     
     public void delete(Long id) {

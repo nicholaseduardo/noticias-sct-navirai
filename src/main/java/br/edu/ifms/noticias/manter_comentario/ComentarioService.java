@@ -30,8 +30,8 @@ public class ComentarioService {
     @Autowired
     private AvaliacaoRepository avaliacaoRepo;
     
-    public void add(Long noticiaId, ComentarioRequest request) {
-        request.cadastrar(noticiaRepo, repo, noticiaId);
+    public Comentario add(Long noticiaId, ComentarioRequest request) {
+        return request.cadastrar(noticiaRepo, repo, noticiaId);
     }
     
     public Boolean avaliar(Long nid, Long comid, TipoAvaliacao tipo,
