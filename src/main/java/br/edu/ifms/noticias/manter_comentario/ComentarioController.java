@@ -4,11 +4,7 @@
  */
 package br.edu.ifms.noticias.manter_comentario;
 
-import br.edu.ifms.noticias.manter_avaliacao.Avaliacao;
-import br.edu.ifms.noticias.manter_avaliacao.AvaliacaoRepository;
 import br.edu.ifms.noticias.manter_avaliacao.TipoAvaliacao;
-import br.edu.ifms.noticias.manter_noticias.Noticia;
-import br.edu.ifms.noticias.manter_noticias.NoticiaRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -16,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +33,7 @@ public class ComentarioController {
     @Transactional
     public String add(
             @PathVariable("noticiaId") Long noticiaId,
-            @Valid Comentario comentario,
+            @Valid ComentarioRequest comentario,
             BindingResult result,
             Model model) {
         if (result.hasErrors()) {

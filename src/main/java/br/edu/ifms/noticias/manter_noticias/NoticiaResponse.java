@@ -11,17 +11,17 @@ import java.util.stream.Collectors;
  *
  * @author 1513003
  */
-public class NoticiaDto extends AbstractNoticiaDto {
+public class NoticiaResponse extends AbstractNoticiaResponse {
 
-    public NoticiaDto() {
+    public NoticiaResponse() {
     }
     
-    public NoticiaDto(Noticia obj) {
+    public NoticiaResponse(Noticia obj) {
         super(obj);
     }
     
-    public static List<NoticiaDto> converter(List<Noticia> lista) {
-        return lista.stream().map(NoticiaDto::new)
+    public static List<NoticiaResponse> converter(List<Noticia> lista) {
+        return lista.stream().map(NoticiaResponse::new)
                 .collect(Collectors.toList());
     }
 }

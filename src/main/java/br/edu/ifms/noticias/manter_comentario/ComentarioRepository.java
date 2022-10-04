@@ -4,6 +4,7 @@
  */
 package br.edu.ifms.noticias.manter_comentario;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ComentarioRepository extends JpaRepository<Comentario, ComentarioId> {
+    
+    public Optional<Comentario> findByIdNoticiaIdAndIdNumero(Long noticiaId, Long numero);
     
 }

@@ -10,18 +10,20 @@ import java.time.format.DateTimeFormatter;
  *
  * @author 1513003
  */
-public abstract class AbstractNoticiaDto {
+public abstract class AbstractNoticiaResponse {
     private Long id;
     private String titulo;
+    private String descricao;
     private String urlImagem;
     private String emissao;
 
-    public AbstractNoticiaDto() {
+    public AbstractNoticiaResponse() {
     }
     
-    public AbstractNoticiaDto(Noticia obj) {
+    public AbstractNoticiaResponse(Noticia obj) {
         this.id = obj.getId();
         this.titulo = obj.getTitulo();
+        this.descricao = obj.getDescricao();
         this.urlImagem = obj.getUrlImagem();
         this.emissao = obj.getEmissao()
                 .format(DateTimeFormatter
@@ -34,6 +36,10 @@ public abstract class AbstractNoticiaDto {
 
     public String getTitulo() {
         return titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 
     public String getUrlImagem() {

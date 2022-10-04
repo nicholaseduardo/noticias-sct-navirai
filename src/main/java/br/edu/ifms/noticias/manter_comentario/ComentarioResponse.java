@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
  *
  * @author 1513003
  */
-public class ComentarioDto {
+public class ComentarioResponse {
     private Long numero;
     private String descricao;
     private String emissao;
     private Long gostei;
     private Long naoGostei;
 
-    public ComentarioDto() {
+    public ComentarioResponse() {
     }
     
-    public ComentarioDto(Comentario obj) {
+    public ComentarioResponse(Comentario obj) {
         this.numero = obj.getId().getNumero();
         this.descricao = obj.getDescricao();
         this.emissao = obj.getEmissao()
@@ -58,8 +58,8 @@ public class ComentarioDto {
         return naoGostei;
     }
     
-    public static List<ComentarioDto> converter(List<Comentario> lista) {
-        List<ComentarioDto> l = lista.stream().map(ComentarioDto::new)
+    public static List<ComentarioResponse> converter(List<Comentario> lista) {
+        List<ComentarioResponse> l = lista.stream().map(ComentarioResponse::new)
                 .collect(Collectors.toList());
         return l;
     }
